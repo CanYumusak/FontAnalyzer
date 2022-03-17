@@ -122,6 +122,7 @@ fun FontDisplay(
         Text(
             modifier = Modifier
                 .border(Dp.Hairline, Color.Black.copy(alpha = 0.2f))
+                .background(Color.Yellow.copy(alpha = 0.2f))
                 .drawBehind {
                     translate(top = -fontMetrics.top) {
                         // Baseline
