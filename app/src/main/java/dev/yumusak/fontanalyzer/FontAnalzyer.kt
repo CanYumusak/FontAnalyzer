@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.LocalContext
@@ -46,26 +45,24 @@ fun FontAnalzyer(fontId: Int) = with(LocalDensity.current) {
             modifier = Modifier.fillMaxSize()
         ) {
             FontDisplay(paint, fontSize, fontId)
-            FontMetricsList(paint, fontSize, fontId)
+            FontMetricsList(paint)
         }
     }
 }
 
 @Composable
 fun FontMetricsList(
-    paint: Paint,
-    fontSize: TextUnit,
-    font: Int
+    paint: Paint
 ) = with(LocalDensity.current) {
     val fontMetrics = paint.fontMetrics
     Column(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Metric(Color.Blue, "Top", fontMetrics.top)
-        Metric(Color.DarkGray, "Ascent", fontMetrics.ascent)
-        Metric(Color.DarkGray, "Descent", fontMetrics.descent)
-        Metric(Color.Blue, "Bottom", fontMetrics.bottom)
+        Metric(ColorTopBottom, "Top", fontMetrics.top)
+        Metric(ColorAscentDescent, "Ascent", fontMetrics.ascent)
+        Metric(ColorAscentDescent, "Descent", fontMetrics.descent)
+        Metric(ColorTopBottom, "Bottom", fontMetrics.bottom)
 
         val height = StaticLayout.Builder.obtain(
             "Fylo",
@@ -75,7 +72,7 @@ fun FontMetricsList(
             Integer.MAX_VALUE
         ).build().height
         Metric(null, "Font size", paint.textSize)
-        Metric(null, "Height", height.toFloat())
+        Metric(ColorTextHeight, "Height", height.toFloat())
     }
 }
 
@@ -122,7 +119,7 @@ fun FontDisplay(
         Text(
             modifier = Modifier
                 .border(Dp.Hairline, Color.Black.copy(alpha = 0.2f))
-                .background(Color.Yellow.copy(alpha = 0.2f))
+                .background(ColorTextHeight)
                 .drawBehind {
                     translate(top = -fontMetrics.top) {
                         // Baseline
@@ -139,7 +136,7 @@ fun FontDisplay(
 private fun DrawScope.FontMetrics(fontMetrics: Paint.FontMetrics) {
     drawLine(
         Color.Red,
-        strokeWidth = 3.0f,
+        strokeWidth = FontSizeStrokeWidth,
         start = Offset(0f, 0f),
         end = Offset(size.width, 0f)
     )
@@ -147,39 +144,39 @@ private fun DrawScope.FontMetrics(fontMetrics: Paint.FontMetrics) {
     // Baseline
     drawLine(
         Color.Red,
-        strokeWidth = 3.0f,
+        strokeWidth = FontSizeStrokeWidth,
         start = Offset(0f, 0f),
         end = Offset(size.width, 0f)
     )
 
     // Descent
     drawLine(
-        Color.DarkGray,
-        strokeWidth = 3.0f,
+        ColorAscentDescent,
+        strokeWidth = FontSizeStrokeWidth,
         start = Offset(0f, fontMetrics.descent),
         end = Offset(size.width, fontMetrics.descent)
     )
 
     // Ascent
     drawLine(
-        Color.DarkGray,
-        strokeWidth = 3.0f,
+        ColorAscentDescent,
+        strokeWidth = FontSizeStrokeWidth,
         start = Offset(0f, fontMetrics.ascent),
         end = Offset(size.width, fontMetrics.ascent)
     )
 
     // Top
     drawLine(
-        Color.Blue,
-        strokeWidth = 3.0f,
+        ColorTopBottom,
+        strokeWidth = FontSizeStrokeWidth,
         start = Offset(0f, fontMetrics.top),
         end = Offset(size.width, fontMetrics.top)
     )
 
     // Bottom
     drawLine(
-        Color.Blue,
-        strokeWidth = 3.0f,
+        ColorTopBottom,
+        strokeWidth = FontSizeStrokeWidth,
         start = Offset(0f, fontMetrics.bottom),
         end = Offset(size.width, fontMetrics.bottom)
     )
@@ -189,6 +186,12 @@ private fun DrawScope.FontMetrics(fontMetrics: Paint.FontMetrics) {
 @Composable
 fun FontAnalzyerPreview() {
     FontAnalyzerTheme {
-        FontAnalzyer(R.font.nationale_bold)
+        FontAnalzyer(R.font.nationale_demi_bold)
     }
 }
+
+val ColorTextHeight = Color.Yellow.copy(alpha = 0.2f)
+val ColorTopBottom = Color.Blue
+val ColorAscentDescent = Color.DarkGray
+
+const val FontSizeStrokeWidth = 3.0f

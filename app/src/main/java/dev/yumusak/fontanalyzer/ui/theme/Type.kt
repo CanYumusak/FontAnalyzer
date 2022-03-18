@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import dev.yumusak.fontanalyzer.R
 
-val fontFamily = FontFamily(Font(R.font.opensans_medium, FontWeight.Medium))
+val fontFamily = FontFamily(Font(R.font.opensans_semibold, FontWeight.Medium))
 
 // Set of Material typography styles to start with
 val Typography = Typography(
